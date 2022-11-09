@@ -2,20 +2,56 @@ package com.news.crimson.entity;
 
 import java.util.List;
 
-import lombok.Data;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import lombok.Data;  
 
 @Data
+@Entity
+@Table(name="User")
 public class User {
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "ID")
 	public Integer id;	
+
+	@Column(name = "FIRST_NAME")
 	public String firstName;
+	
+	@Column(name = "LAST_NAME")
 	public String lastName;
+	
+	@Column(name = "EMAIL")
 	public String email;
+	
+	@Column(name = "PHONE_NO")
 	public String phoneNo;
+	
+	@Column(name = "LOCATION")
 	public String location;
-	public List<String> favCategory;
-	public List<Object> friends;
-	public List<Object> followers;
-	public List<Object> blocked;	
+	
+	@Column(name = "FAV_CATEGORY")
+	public String favCategory;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FRIEND_ID")
+	public List<FriendProfile> friends;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FOLLOWER_ID")
+	public List<FollowerProfile> followers;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "BLOCKED_ID")
+	public List<BlockedProfile> blocked;	
 
 }
