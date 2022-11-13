@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service;
 
 import com.news.crimson.dao.UserDao;
 import com.news.crimson.entity.User;
-import com.news.crimson.model.ProfileInfo;
 
 @Service
 public class ProfileService {
-	
+
 	@Autowired
 	private UserDao userDao;
 
-	public User getProfileDetails() {
-		return new User();
+	public User getProfileDetails(User user) {
+		return userDao.findUser(user);
 	}
 
-	public String updateProfileDetails(ProfileInfo profileInfo) {
+	public User updateProfileDetails(User user) {
 
-		return "Profile updated successfully!";
+		return userDao.updateProfile(user);
+
 	}
 
 	public String blockProfile(Integer userId, Integer blockId) {
@@ -36,8 +36,8 @@ public class ProfileService {
 	public String addFriend(Integer userId, Integer friendId) {
 		return "Friend request successful!";
 	}
-	
-	public List<User> getAllProfiles(){
+
+	public List<User> getAllProfiles() {
 		return userDao.findAll();
 	}
 }

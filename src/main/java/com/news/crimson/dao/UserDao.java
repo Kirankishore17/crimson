@@ -13,12 +13,20 @@ public class UserDao {
 
 	@Autowired
 	UserRepo repo;
-	
-	public List<User> findAll(){
+
+	public List<User> findAll() {
 		List<User> userList = repo.findAll();
-		return 	userList;
+		return userList;
 	}
 	
+	public User findUser(User user) {
+		List<User> userList = repo.getUserByEmailAndSource(user.getEmail(), user.getLoginSource());
+		if(userList.size() == 1) {
+			return userList.get(0);
+		} else return null;
+		
+	}
+
 	public User addUser(User user) {
 		return repo.save(user);
 	}
@@ -27,6 +35,18 @@ public class UserDao {
 		repo.deleteById(id);
 	}
 
-
+	public User updateProfile(User user) {
+		List<Integer> userID = repo.getUserIDByEmailAndSource(user.getEmail(), user.getLoginSource());
+		
+		if (userID.isEmpty()) {
+			return repo.save(user);
+		} else if (userID.size() == 1) {
+			user.setId(userID.get(0));
+			return repo.save(user);
+			
+			} else
+				return null;
+		
+	}
 
 }

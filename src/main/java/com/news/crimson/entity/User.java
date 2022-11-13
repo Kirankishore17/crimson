@@ -33,8 +33,8 @@ public class User {
 	@Column(name = "EMAIL")
 	public String email;
 	
-	@Column(name = "PHONE_NO")
-	public String phoneNo;
+	@Column(name = "LOGIN_SOURCE")
+	public String loginSource;
 	
 	@Column(name = "LOCATION")
 	public String location;
