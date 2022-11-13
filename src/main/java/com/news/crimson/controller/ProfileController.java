@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.news.crimson.entity.User;
-import com.news.crimson.model.ProfileInfo;
 import com.news.crimson.model.ResponseInfo;
 import com.news.crimson.service.ProfileService;
 
@@ -25,20 +24,20 @@ public class ProfileController {
 	private ProfileService profileService;
 	
 	@GetMapping(path = "/profile")
-	public User viewProfile() {
-		return profileService.getProfileDetails();
+	public User viewProfile(@RequestBody User user) {
+		return profileService.getProfileDetails(user);
 	}
 	
 	@PutMapping(path = "/profile")
-	public ResponseEntity updateProfile(@RequestBody ProfileInfo profileInfo) {
+	public ResponseEntity<User> updateProfile(@RequestBody User user) {
 		HttpStatus statusCode;
-		if(profileInfo.getId() == null) {
+		if(user.getId() == null) {
 			statusCode = HttpStatus.CREATED;
 		} else {
 			statusCode = HttpStatus.OK;
 		}
-		String message = profileService.updateProfileDetails(profileInfo);
-		return new ResponseEntity<String>(message, statusCode);
+		User userResponse = profileService.updateProfileDetails(user);
+		return new ResponseEntity<User>(userResponse, statusCode);
 
 	}
 
