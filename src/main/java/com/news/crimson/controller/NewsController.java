@@ -21,12 +21,17 @@ public class NewsController {
 	private NewsService newsService;
 
 	@GetMapping("/news/home")
-	public List<NewsInfo> getNews(@RequestParam(required = true) String q, @RequestParam(required = false) String location) throws ServiceException {
+	public List<NewsInfo> getNews() throws ServiceException {
 		return newsService.getNews();
 	}
 	
 	@GetMapping("/news/search")
 	public List<NewsInfo> searchNews(@RequestParam(required = true) String q, @RequestParam(required = false) String location) throws ServiceException {
 		return newsService.searchNews(q, location);
+	}
+	
+	@GetMapping("/news/topic")
+	public List<NewsInfo> getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
+		return newsService.getNewsByTopic(q);
 	}
 }

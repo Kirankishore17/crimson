@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.news.crimson.exception.ServiceException;
+import com.news.crimson.model.NewsCategory;
 import com.news.crimson.model.NewsInfo;
 import com.news.crimson.model.newsapi.NewsBody;
 
@@ -85,5 +86,24 @@ public class NewsService {
 			log.error(e.toString());
 			throw new ServiceException("Error");
 		}
+	}
+	public List<NewsInfo> getNewsByTopic(String topic) throws ServiceException {
+		NewsInfo newsList = new NewsInfo();
+		try {
+			String topicKey = NewsCategory.valueOf(topic.toUpperCase()).getCategoryValue();
+			String url = this.rssNewsTopic.replace("{TOPIC_ID}", topicKey);
+			String newsBodyStr = restTemplate.getForObject(url, String.class);
+			String json = getJsonFromXmlString(newsBodyStr);
+			NewsBody body = objectMapper.readValue(json.getBytes(), NewsBody.class);
+			return newsList.getNewsInfoListFromRssNews(body);
+		}
+		catch(IllegalArgumentException e) {
+			log.error("Invalid topic name: " + topic.toUpperCase());
+			throw new ServiceException("Invide topic");
+		}
+		catch(Exception e) {
+			log.error(e.toString());
+		}
+		return null;
 	}
 }
