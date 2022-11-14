@@ -14,12 +14,11 @@ public class FriendProfile {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "ID")
+	@Column(name = "FRIEND_ID")
 	public Integer id;	
 	
 	@Column(name = "USER_ID")
 	private Integer userId;
-//	private Integer friendId;
 	
 	@Column(name = "FRIEND_PROFILE_NAME")
 	private String friendProfileName;

@@ -33,6 +33,9 @@ public class User {
 	@Column(name = "EMAIL")
 	public String email;
 	
+	@Column(name = "PROFILE_PIC", length = 500)
+	public String profilePic;
+	
 	@Column(name = "LOGIN_SOURCE")
 	public String loginSource;
 	
@@ -43,15 +46,15 @@ public class User {
 	public String favCategory;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FRIEND_ID")
+	@JoinColumn(name = "USER_ID")
 	public List<FriendProfile> friends;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FOLLOWER_ID")
+	@JoinColumn(name = "USER_ID")
 	public List<FollowerProfile> followers;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "BLOCKED_ID")
+	@JoinColumn(name = "USER_ID")
 	public List<BlockedProfile> blocked;	
 
 }
