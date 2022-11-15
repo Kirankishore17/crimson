@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.news.crimson.entity.User;
-import com.news.crimson.model.ResponseInfo;
 import com.news.crimson.service.ProfileService;
 
 @RestController
@@ -23,12 +22,12 @@ public class ProfileController {
 	@Autowired
 	private ProfileService profileService;
 	
-	@GetMapping(path = "/profile")
-	public User viewProfile(@RequestBody User user) {
-		return profileService.getProfileDetails(user);
+	@GetMapping(path = "/profile", produces = "application/json")
+	public User viewProfile(@RequestParam Integer userId) {
+		return profileService.getProfileDetails(userId);
 	}
 	
-	@PutMapping(path = "/profile")
+	@PutMapping(path = "/profile", produces = "application/json")
 	public ResponseEntity<User> updateProfile(@RequestBody User user) {
 		HttpStatus statusCode;
 		if(user.getId() == null) {
@@ -41,25 +40,25 @@ public class ProfileController {
 
 	}
 
-	@DeleteMapping(path = "/profile/block")
+	@DeleteMapping(path = "/profile/block", produces = "application/json")
 	public ResponseEntity blockProfile(@RequestParam("userId") Integer userId, @RequestParam("blockId") Integer blockId) {
 		String message = profileService.blockProfile(userId, blockId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/profile/follow")
+	@GetMapping(path = "/profile/follow", produces = "application/json")
 	public ResponseEntity followProfile(@RequestParam("userId") Integer userId, @RequestParam("followId") Integer followId) {
 		String message = profileService.followProfile(userId, followId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/profile/friend")
+	@GetMapping(path = "/profile/friend", produces = "application/json")
 	public ResponseEntity addFriend(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer friendId) {
 		String message = profileService.addFriend(userId, friendId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/profile/all")
+	@GetMapping(path = "/profile/all", produces = "application/json")
 	public List<User> getAllProfile() {
 		return profileService.getAllProfiles();
 	}

@@ -20,17 +20,17 @@ public class NewsController {
 	@Autowired
 	private NewsService newsService;
 
-	@GetMapping("/news/home")
+	@GetMapping(path = "/news/home", produces = "application/json")
 	public List<NewsInfo> getNews() throws ServiceException {
 		return newsService.getNews();
 	}
 	
-	@GetMapping("/news/search")
+	@GetMapping(path = "/news/search", produces = "application/json")
 	public List<NewsInfo> searchNews(@RequestParam(required = true) String q, @RequestParam(required = false) String location) throws ServiceException {
 		return newsService.searchNews(q, location);
 	}
 	
-	@GetMapping("/news/topic")
+	@GetMapping(path = "/news/topic", produces = "application/json")
 	public List<NewsInfo> getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
 		return newsService.getNewsByTopic(q);
 	}
