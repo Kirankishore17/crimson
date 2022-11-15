@@ -24,7 +24,6 @@ public class UserDao {
 		if(userList.size() == 1) {
 			return userList.get(0);
 		} else return null;
-		
 	}
 
 	public User addUser(User user) {
@@ -47,6 +46,10 @@ public class UserDao {
 			} else
 				return null;
 		
+	}
+
+	public User findUserById(Integer userId) {
+		return repo.getReferenceById(userId);
 	}
 
 }

@@ -14,6 +14,7 @@ import lombok.Data;
 @Data
 public class NewsInfo {
 
+	private Integer id;
 	private String headlines;
 	private String sourceUrl;
 	private String sourceName;
@@ -25,8 +26,10 @@ public class NewsInfo {
 		List<NewsInfo> news = new ArrayList<>();
 		if(rssNewsBody.getChannel() != null && rssNewsBody.getChannel().getItem() != null) {
 			List<NewsItem> contentList = rssNewsBody.getChannel().getItem();
+			int count = 1;
 			for (NewsItem item : contentList) {
 				NewsInfo info = new NewsInfo();
+				info.setId(count);
 				ObjectMapper objectMapper = new ObjectMapper();
 				Map<String, String> source = objectMapper.convertValue(item.getSource(), HashMap.class);
 				if(source.keySet().contains("url"))
@@ -38,6 +41,7 @@ public class NewsInfo {
 				info.setDescription(item.getDescription());
 				info.setPublishDate(item.getPubDate());
 				info.setArticleUrl(item.getLink());
+				count++;
 				news.add(info);
 			}
 		}
