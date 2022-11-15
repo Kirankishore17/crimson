@@ -14,12 +14,14 @@ public class ProfileService {
 	@Autowired
 	private UserDao userDao;
 
-	public User getProfileDetails(User user) {
-		return userDao.findUser(user);
+	public User getProfileDetails(Integer userId) {
+		return userDao.findUserById(userId);
 	}
 
 	public User updateProfileDetails(User user) {
-
+		if(user.getFavCategory() == null) {
+			user.setFavCategory("[]");
+		}
 		return userDao.updateProfile(user);
 
 	}
