@@ -49,7 +49,11 @@ public class UserDao {
 	}
 
 	public User findUserById(Integer userId) {
-		return repo.getReferenceById(userId);
+		 
+		 List<User> userList = repo.getUserById(userId);;
+			if(userList.size() == 1) {
+				return userList.get(0);
+			} else return null;
 	}
 
 }
