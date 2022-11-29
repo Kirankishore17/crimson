@@ -11,7 +11,6 @@ public class NewsInfo {
 	private String sourceName;
 	private String articleUrl;
 	private String publishDate;
-	private String description;
 	private String cover;
 	
 }
