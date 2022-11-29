@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 public class NewsController {
-	
+
 	@Autowired
 	private NewsService newsService;
 
@@ -24,14 +24,16 @@ public class NewsController {
 	public List<NewsInfo> getNews() throws ServiceException {
 		return newsService.getNews();
 	}
-	
+
 	@GetMapping(path = "/news/search", produces = "application/json")
-	public List<NewsInfo> searchNews(@RequestParam(required = true) String q, @RequestParam(required = false) String location) throws ServiceException {
+	public List<NewsInfo> searchNews(@RequestParam(required = true) String q,
+			@RequestParam(required = false) String location) throws ServiceException {
 		return newsService.searchNews(q, location);
 	}
-	
+
 	@GetMapping(path = "/news/topic", produces = "application/json")
 	public List<NewsInfo> getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
 		return newsService.getNewsByTopic(q);
 	}
+
 }
