@@ -34,6 +34,9 @@ public class NewsService {
 	@Value("${rss.news.topic}")
 	private String rssNewsTopic;
 
+	@Value("${news.article.image}")
+	private String imageNewsUrl;
+
 	@Autowired
 	private NewsInfoService newsInfoService;
 
@@ -51,22 +54,6 @@ public class NewsService {
 
 	}
 
-	public String getImageUrl(String title) throws ServiceException {
-		try {
-//			String url = this.imageNewsUrl.replace("{title}", title);
-			String url = "https://serpapi.com/search.json?q=Apple&tbm=isch&ijn=0";
-			ImageBody imageBody = restTemplate.getForObject(url, ImageBody.class);
-			if (imageBody.getImages_results() == null)
-				return "";
-			else if (imageBody.getImages_results() == null)
-				return "";
-			else if (imageBody.getImages_results().isEmpty())
-				return "";
-			return imageBody.getImages_results().get(0).getOriginal();
-		} catch (Exception e) {
-			throw new ServiceException(e.getMessage());
-		}
-	}
 
 	public List<NewsInfo> getNews() {
 		try {
