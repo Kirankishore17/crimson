@@ -14,8 +14,11 @@ public class FollowerProfile {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "FOLLOWER_ID")
+	@Column(name = "ID")
 	public Integer id;	
+	
+	@Column(name = "FOLLOWER_ID")
+	public Integer followerId;	
 	
 	@Column(name = "USER_ID")
 	private Integer userId;
