@@ -1,5 +1,6 @@
 package com.news.crimson.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,25 @@ public class UserDao {
 			if(userList.size() == 1) {
 				return userList.get(0);
 			} else return null;
+	}
+	
+	public Integer numberOfUsers() {
+		return repo.countTotalNumberOfUsers();
+	}
+	
+	public HashMap<String,Integer> categoryCount(){
+		
+		HashMap<String,Integer> categoryListCount = new HashMap<String,Integer>();
+		categoryListCount.put("WORLD", repo.countTotalNumberOfUsersForCategoryWorld());
+		categoryListCount.put("LOCAL", repo.countTotalNumberOfUsersForCategoryLocal());
+		categoryListCount.put("BUSINESS", repo.countTotalNumberOfUsersForCategoryBusiness());
+		categoryListCount.put("TECHNOLOGY", repo.countTotalNumberOfUsersForCategoryTechnology());
+		categoryListCount.put("ENTERTAINMENT", repo.countTotalNumberOfUsersForCategoryEntertainment());
+		categoryListCount.put("SPORTS", repo.countTotalNumberOfUsersForCategorySports());
+		categoryListCount.put("SCIENCE", repo.countTotalNumberOfUsersForCategoryScience());
+		categoryListCount.put("HEALTH", repo.countTotalNumberOfUsersForCategoryHealth());
+		return categoryListCount;
+		
 	}
 
 }
