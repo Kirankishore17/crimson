@@ -60,7 +60,8 @@ public class NewsInfoService {
 					info.setSourceName(source.get(""));
 				String title = item.getTitle().substring(0, item.getTitle().length() - (2 + source.get("").length()));
 				info.setHeadlines(title);
-				info.setCover(getImageUrl(title));
+//				info.setCover(getImageUrl(title));
+				info.setCover("https://static.vecteezy.com/system/resources/previews/000/228/896/original/vector-breaking-news-alert-background-in-red-theme.jpg");
 				info.setPublishDate(item.getPubDate());
 				info.setArticleUrl(item.getLink());
 				count++;
