@@ -1,12 +1,11 @@
 package com.news.crimson.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,27 +39,47 @@ public class ProfileController {
 
 	}
 
-	@DeleteMapping(path = "/profile/block", produces = "application/json")
-	public ResponseEntity blockProfile(@RequestParam("userId") Integer userId, @RequestParam("blockId") Integer blockId) {
+	@PostMapping(path = "/profile/block", produces = "application/json")
+	public ResponseEntity<String> blockProfile(@RequestParam("userId") Integer userId, @RequestParam("blockId") Integer blockId) {
 		String message = profileService.blockProfile(userId, blockId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
-
-	@GetMapping(path = "/profile/follow", produces = "application/json")
-	public ResponseEntity followProfile(@RequestParam("userId") Integer userId, @RequestParam("followId") Integer followId) {
-		String message = profileService.followProfile(userId, followId);
+	
+	@DeleteMapping(path = "/profile/unblock", produces = "application/json")
+	public ResponseEntity<String> unblockProfile(@RequestParam("userId") Integer userId, @RequestParam("blockId") Integer blockId) {
+		String message = profileService.unblockProfile(userId, blockId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/profile/friend", produces = "application/json")
-	public ResponseEntity addFriend(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer friendId) {
+	@PostMapping(path = "/profile/follow", produces = "application/json")
+	public ResponseEntity<String> followProfile(@RequestParam("userId") Integer userId, @RequestParam("followerId") Integer followerId) {
+		String message = profileService.followProfile(userId, followerId);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path = "/profile/unfollow", produces = "application/json")
+	public ResponseEntity<String> unfollowProfile(@RequestParam("userId") Integer userId, @RequestParam("followerId") Integer followerId) {
+		String message = profileService.unfollowProfile(userId, followerId);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
+	}
+
+	@PutMapping(path = "/profile/sendFriendRequest", produces = "application/json")
+	public ResponseEntity<String> addFriendRequest(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer friendId) {
+		String message = profileService.addFriendRequest(userId, friendId);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
+	}
+	
+	@PutMapping(path = "/profile/acceptFriendRequest", produces = "application/json")
+	public ResponseEntity<String> addFriend(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer friendId) {
 		String message = profileService.addFriend(userId, friendId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
-
-	@GetMapping(path = "/profile/all", produces = "application/json")
-	public List<User> getAllProfile() {
-		return profileService.getAllProfiles();
+	
+	@DeleteMapping(path = "/profile/unfriend", produces = "application/json")
+	public ResponseEntity<String> deleteFriend(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer friendId) {
+		String message = profileService.deleteFriend(userId, friendId);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
+
 	
 }

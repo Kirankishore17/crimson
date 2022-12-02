@@ -16,8 +16,11 @@ public class BlockedProfile {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "ID")
+	public Integer id;	
+	
 	@Column(name = "BLOCKED_ID")
-	private Integer id;
+	private Integer blockedId;
 	
 	@Column(name = "USER_ID")
 	private Integer userId;
