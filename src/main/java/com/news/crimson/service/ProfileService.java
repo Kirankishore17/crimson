@@ -118,7 +118,5 @@ public class ProfileService {
 		return message;
 	}
 
-	public List<User> getAllProfiles() {
-		return userDao.findAll();
-	}
+	
 }

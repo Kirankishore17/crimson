@@ -18,6 +18,33 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 	
 	@Query(value = "SELECT * FROM USER u WHERE u.id = :id",  nativeQuery = true)
 	List<User> getUserById(@Param("id") Integer id);
+	
+	@Query(value = "SELECT COUNT(*) FROM USER",  nativeQuery = true)
+	Integer countTotalNumberOfUsers();
+	
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%WORLD%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryWorld();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%LOCAL%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryLocal();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%BUSINESS%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryBusiness();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%TECHNOLOGY%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryTechnology();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%ENTERTAINMENT%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryEntertainment();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%SPORTS%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategorySports();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%SCIENCE%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryScience();
+		
+	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%HEALTH%'",  nativeQuery = true)
+	Integer countTotalNumberOfUsersForCategoryHealth();
 		
 	
 }

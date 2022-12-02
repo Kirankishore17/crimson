@@ -1,7 +1,5 @@
 package com.news.crimson.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,9 +81,5 @@ public class ProfileController {
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/profile/all", produces = "application/json")
-	public List<User> getAllProfile() {
-		return profileService.getAllProfiles();
-	}
 	
 }
