@@ -1,6 +1,5 @@
 package com.news.crimson.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.news.crimson.dao.NewsDao;
+import com.news.crimson.dao.TopicNewsDao;
+import com.news.crimson.entity.BookmarkedNews;
 import com.news.crimson.exception.ServiceException;
-import com.news.crimson.model.NewsCategory;
 import com.news.crimson.model.NewsInfo;
-import com.news.crimson.model.newsapi.ImageBody;
 import com.news.crimson.model.newsapi.NewsBody;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,75 +39,87 @@ public class NewsService {
 	private NewsInfoService newsInfoService;
 
 	@Autowired
+	private NewsDao newsDao;
+
+	@Autowired
+	private TopicNewsDao topicNewsDao;
+
+	@Autowired
 	private ObjectMapper objectMapper;
 
 	@Autowired
 	private RestTemplate restTemplate;
 
-	private String getJsonFromXmlString(String xmlBody) throws IOException {
-		XmlMapper xmlMapper = new XmlMapper();
-		JsonNode node = xmlMapper.readTree(xmlBody.getBytes());
-		String json = objectMapper.writeValueAsString(node);
-		return json;
-
-	}
-
-
-	public List<NewsInfo> getNews() {
+	public List<NewsInfo> getNews() throws ServiceException {
 		try {
-			String newsBodyStr = restTemplate.getForObject(this.rssNewsHome, String.class);
-			String json = getJsonFromXmlString(newsBodyStr);
-			NewsBody body = objectMapper.readValue(json.getBytes(), NewsBody.class);
-			return newsInfoService.getNewsInfoListFromRssNews(body);
+			return newsDao.getNews();
 		} catch (Exception e) {
 			log.error(e.toString());
+			throw new ServiceException(e.getMessage());
 		}
-		return new ArrayList<>();
 	}
 
 	public List<NewsInfo> searchNews(String q, String location) throws ServiceException {
 		String url = this.rssNewsSearch;
 		NewsBody body = new NewsBody();
 		List<String> queryList = new ArrayList<>();
-		if (q != null) {
-			queryList.add("q=" + q);
-		}
-		if (location != null) {
-			queryList.add("gl=" + location);
-		}
-		String query = String.join("&", queryList);
-		url = url + "?" + query;
-		log.info("Url: " + url);
 		try {
+
+			if (q != null) {
+				queryList.add("q=" + q);
+			}
+			if (location != null) {
+				queryList.add("gl=" + location);
+			}
+			String query = String.join("&", queryList);
+			url = url + "?" + query;
+			log.info("Url: " + url);
 			String newsBodyStr = restTemplate.getForObject(url, String.class);
-			String json = getJsonFromXmlString(newsBodyStr);
+			String json = newsInfoService.getJsonFromXmlString(newsBodyStr);
 			body = objectMapper.readValue(json.getBytes(), NewsBody.class);
-			return newsInfoService.getNewsInfoListFromRssNews(body);
+			return newsInfoService.getNewsInfoListFromRssNews(body, "search");
 
 		} catch (RestClientException e) {
 			log.error(e.toString());
 			throw new RestClientException("External API call failed");
 		} catch (Exception e) {
 			log.error(e.toString());
-			throw new ServiceException("Error");
+			throw new ServiceException(e.getMessage());
 		}
 	}
 
 	public List<NewsInfo> getNewsByTopic(String topic) throws ServiceException {
 		try {
-			String topicKey = NewsCategory.valueOf(topic.toUpperCase()).getCategoryValue();
-			String url = this.rssNewsTopic.replace("{TOPIC_ID}", topicKey);
-			String newsBodyStr = restTemplate.getForObject(url, String.class);
-			String json = getJsonFromXmlString(newsBodyStr);
-			NewsBody body = objectMapper.readValue(json.getBytes(), NewsBody.class);
-			return newsInfoService.getNewsInfoListFromRssNews(body);
+			return topicNewsDao.getNewsByTopic(topic);
+
 		} catch (IllegalArgumentException e) {
 			log.error("Invalid topic name: " + topic.toUpperCase());
-			throw new ServiceException("Invide topic");
+			throw new ServiceException(e.getMessage());
 		} catch (Exception e) {
 			log.error(e.toString());
+			throw new ServiceException(e.getMessage());
 		}
-		return null;
+	}
+
+	public String bookmarkNews(Integer userId, NewsInfo newsInfo) {
+		BookmarkedNews bookmark = new BookmarkedNews();
+		bookmark.setUserId(userId.toString());
+		bookmark.setSourceUrl(newsInfo.getSourceUrl());
+		bookmark.setSourceName(newsInfo.getSourceName());
+		bookmark.setPublishDate(newsInfo.getPublishDate());
+		bookmark.setHeadlines(newsInfo.getHeadlines());
+		bookmark.setCover(newsInfo.getCover());
+		bookmark.setArticleUrl(newsInfo.getArticleUrl());
+//		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+//		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+//		String savedDate = formatter.format(new Date());
+//		bookmark.setSavedDate(savedDate.replace(".", ""));
+		newsDao.bookmarkNews(bookmark);
+		return "News Saved Successfully";
+	}
+
+	public String getBookmarkedNews(Integer userId) {
+		return newsDao.getBookmarkedNews(userId);
 	}
 
 }
