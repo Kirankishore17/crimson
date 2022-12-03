@@ -11,6 +11,6 @@ import com.news.crimson.model.TopicNewsInfo;
 public interface TopicNewsRepo extends JpaRepository<TopicNewsInfo, Integer>{
 
 	@Query(value = "select * from topic_news_info where topic=:topic order by id desc limit 30", nativeQuery = true)
-	public List<NewsInfo> getNewsByTopic(String topic);
+	public List<TopicNewsInfo> getNewsByTopic(String topic);
 
 }

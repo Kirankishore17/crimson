@@ -23,7 +23,7 @@ public class TopicNewsDao {
 		return topicNewsRepo.saveAll(topicList);
 	}
 
-	public List<NewsInfo> getNewsByTopic(String topic) {
+	public List<TopicNewsInfo> getNewsByTopic(String topic) {
 		return topicNewsRepo.getNewsByTopic(topic);
 	}
 

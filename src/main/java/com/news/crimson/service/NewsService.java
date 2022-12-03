@@ -15,6 +15,7 @@ import com.news.crimson.dao.TopicNewsDao;
 import com.news.crimson.entity.BookmarkedNews;
 import com.news.crimson.exception.ServiceException;
 import com.news.crimson.model.NewsInfo;
+import com.news.crimson.model.TopicNewsInfo;
 import com.news.crimson.model.newsapi.NewsBody;
 
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +89,7 @@ public class NewsService {
 		}
 	}
 
-	public List<NewsInfo> getNewsByTopic(String topic) throws ServiceException {
+	public List<TopicNewsInfo> getNewsByTopic(String topic) throws ServiceException {
 		try {
 			return topicNewsDao.getNewsByTopic(topic);
 
