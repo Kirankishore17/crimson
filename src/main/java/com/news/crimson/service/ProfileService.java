@@ -40,6 +40,9 @@ public class ProfileService {
 		return userDao.updateProfile(user);
 
 	}
+	public Boolean checkProfile(String email, String loginSource) {
+		return userDao.getUser(email,loginSource);
+	}
 
 	public String blockProfile(Integer userId, Integer blockId) {
 		
