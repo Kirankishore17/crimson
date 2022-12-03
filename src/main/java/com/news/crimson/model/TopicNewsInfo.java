@@ -11,9 +11,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "NewsInfo")
-public class NewsInfo {
-
+@Table(name = "TopicNewsInfo")
+public class TopicNewsInfo {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "ID")
@@ -27,5 +26,6 @@ public class NewsInfo {
 	private String publishDate;
 	@Column(name="cover", length = 700)
 	private String cover;
-	
+	private String topic;
+
 }

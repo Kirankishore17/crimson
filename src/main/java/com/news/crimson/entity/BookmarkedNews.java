@@ -1,4 +1,4 @@
-package com.news.crimson.model;
+package com.news.crimson.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +11,13 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "NewsInfo")
-public class NewsInfo {
+@Table(name="BookmarkedNews")
+public class BookmarkedNews {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "ID")
 	private Integer id;
+	private String userId;
 	private String headlines;
 	@Column(name="source_url", length = 700)
 	private String sourceUrl;
@@ -27,5 +27,5 @@ public class NewsInfo {
 	private String publishDate;
 	@Column(name="cover", length = 700)
 	private String cover;
-	
+
 }
