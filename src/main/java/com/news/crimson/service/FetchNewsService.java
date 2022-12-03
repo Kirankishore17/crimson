@@ -65,20 +65,18 @@ public class FetchNewsService {
 		}
 	}
 
-	public String fetchNewsByTopic() throws ServiceException {
+	public String fetchNewsByTopic(String topic) throws ServiceException {
 		String json;
 		try {
-			for (NewsCategory topic : NewsCategory.values()) {
-				String topicKey = topic.getCategoryValue();
-				String url = this.rssNewsTopic.replace("{TOPIC_ID}", topicKey);
-				String newsBodyStr = restTemplate.getForObject(url, String.class);
-				json = newsInfoService.getJsonFromXmlString(newsBodyStr);
-				NewsBody body = objectMapper.readValue(json.getBytes(), NewsBody.class);
-				List<NewsInfo> list = newsInfoService.getNewsInfoListFromRssNews(body, "topic");
-				List<TopicNewsInfo> topicList = getTopicNewsListFromNewsInfoList(list, topic.toString().toUpperCase());
-				List<TopicNewsInfo> response = topicNewsDao.saveTopicNews(topicList);
-				log.info(response.size() + " entries added to category:" + topic.toString());
-			}
+			String topicKey = NewsCategory.valueOf(topic.toUpperCase()).getCategoryValue();
+			String url = this.rssNewsTopic.replace("{TOPIC_ID}", topicKey);
+			String newsBodyStr = restTemplate.getForObject(url, String.class);
+			json = newsInfoService.getJsonFromXmlString(newsBodyStr);
+			NewsBody body = objectMapper.readValue(json.getBytes(), NewsBody.class);
+			List<NewsInfo> list = newsInfoService.getNewsInfoListFromRssNews(body, "topic");
+			List<TopicNewsInfo> topicList = getTopicNewsListFromNewsInfoList(list, topic.toString().toUpperCase());
+			List<TopicNewsInfo> response = topicNewsDao.saveTopicNews(topicList);
+			log.info(response.size() + " entries added to category:" + topic.toString());
 
 		} catch (IOException e) {
 			log.error(e.getMessage());
@@ -92,7 +90,7 @@ public class FetchNewsService {
 
 	private List<TopicNewsInfo> getTopicNewsListFromNewsInfoList(List<NewsInfo> list, String topic) {
 		List<TopicNewsInfo> topicList = new ArrayList<>();
-		for(NewsInfo i:list) {
+		for (NewsInfo i : list) {
 			TopicNewsInfo item = new TopicNewsInfo();
 			item.setArticleUrl(i.getArticleUrl());
 			item.setCover(i.getCover());
