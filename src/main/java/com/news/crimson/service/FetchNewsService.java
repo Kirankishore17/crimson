@@ -80,12 +80,10 @@ public class FetchNewsService {
 
 		} catch (IOException e) {
 			log.error(e.getMessage());
-			throw new ServiceException(e.getMessage());
 		} catch (ServiceException e) {
 			log.error(e.getMessage());
-			throw new ServiceException(e.getMessage());
 		}
-		return "success";
+		return "Request Received";
 	}
 
 	private List<TopicNewsInfo> getTopicNewsListFromNewsInfoList(List<NewsInfo> list, String topic) {
