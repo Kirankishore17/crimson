@@ -15,7 +15,7 @@ public class TopicNewsDao {
 	@Autowired
 	private TopicNewsRepo topicNewsRepo;
 
-	public List<NewsInfo> getBookmarkedNews(String topic) {
+	public List<TopicNewsInfo> getBookmarkedNews(String topic) {
 		return topicNewsRepo.getNewsByTopic(topic);
 	}
 
