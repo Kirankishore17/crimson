@@ -48,6 +48,12 @@ public class UserDao {
 				return null;
 		
 	}
+	
+	public Boolean getUser(String email, String loginSource) {
+		List<User> user = repo.getUserByEmailAndSource(email, loginSource);
+		if(user.size() == 1) return true;
+		else return false;
+	}
 
 	public User findUserById(Integer userId) {
 		 
