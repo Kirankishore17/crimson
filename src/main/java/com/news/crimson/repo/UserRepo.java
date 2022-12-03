@@ -45,6 +45,11 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 		
 	@Query(value = "SELECT COUNT(*) FROM USER WHERE fav_category LIKE '%HEALTH%'",  nativeQuery = true)
 	Integer countTotalNumberOfUsersForCategoryHealth();
-		
+
+	@Query(value = "SELECT * FROM USER u WHERE u.location = :location limit 20",  nativeQuery = true)
+	List<User> getProfileByLocation(@Param("location") String location);
+
+	@Query(value = "SELECT * FROM USER u WHERE u.fav_category LIKE CONCAT('%',:category,'%') limit 20",  nativeQuery = true)
+	List<User> getProfileByNewsCategory(@Param("category") String category);
 	
 }
