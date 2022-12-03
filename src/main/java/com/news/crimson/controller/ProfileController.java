@@ -39,6 +39,12 @@ public class ProfileController {
 		return new ResponseEntity<User>(userResponse, statusCode);
 
 	}
+	
+	@GetMapping(path = "/profile/check", produces = "application/json")
+	public Boolean unblockProfile(@RequestParam("email") String email, @RequestParam("loginSource") String loginSource) {
+		return profileService.checkProfile(email,loginSource);
+	}
+		
 
 	@PostMapping(path = "/profile/block", produces = "application/json")
 	public ResponseEntity<String> blockProfile(@RequestParam("userId") Integer userId, @RequestParam("blockId") Integer blockId) {
