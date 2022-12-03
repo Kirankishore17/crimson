@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.news.crimson.exception.ServiceException;
@@ -27,8 +28,8 @@ public class FetchNewsController {
 	}
 
 	@GetMapping(path = "/fetch/news/topic", produces = "application/json")
-	public String getNewsByTopic() throws ServiceException {
-		return fetchNewsService.fetchNewsByTopic();
+	public String getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
+		return fetchNewsService.fetchNewsByTopic(q);
 	}
 
 }
