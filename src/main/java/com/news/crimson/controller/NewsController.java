@@ -3,7 +3,10 @@ package com.news.crimson.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@CrossOrigin(origins = "*", allowedHeaders = "*") 
 public class NewsController {
 
 	@Autowired
@@ -34,6 +38,16 @@ public class NewsController {
 	@GetMapping(path = "/news/topic", produces = "application/json")
 	public List<NewsInfo> getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
 		return newsService.getNewsByTopic(q);
+	}
+	
+	@PostMapping(path = "/news/readlater", produces = "application/json")
+	public String bookmarkNews(@RequestParam(required = true) Integer userId, @RequestBody NewsInfo newsInfo) throws ServiceException {
+		return newsService.bookmarkNews(userId, newsInfo);
+	}
+
+	@GetMapping(path = "/news/readlater", produces = "application/json")
+	public String getBookmarkedNews(@RequestParam(required = true) Integer userId) throws ServiceException {
+		return newsService.getBookmarkedNews(userId);
 	}
 
 }
