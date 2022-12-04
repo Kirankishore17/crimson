@@ -36,13 +36,30 @@ public class ProfileService {
 	}
 
 	public User updateProfileDetails(User user) {
-		if(user.getFavCategory() == null) {
-			user.setFavCategory("[]");
+		
+		User checkUser = userDao.getUserbyEmailAndLoginSource(user.getEmail(),user.getLoginSource());
+		if(user.getFavCategory() == null ) {
+			if(checkUser.getFavCategory() == null)
+				user.setFavCategory("[]");
+			else
+				user.setFavCategory(checkUser.getFavCategory());
+
 		}
+
+//		if(checkUser.getId() != null) {
+//				user.setFavCategory(checkUser.getFavCategory());
+//			
+//		} else {		
+//		
+//			if(checkUser.getFavCategory() == null) {
+//				user.setFavCategory("[]");
+//			}
+//		}
 		return userDao.updateProfile(user);
 
 	}
 	public Boolean checkProfile(String email, String loginSource) {
+		
 		return userDao.getUser(email,loginSource);
 	}
 
