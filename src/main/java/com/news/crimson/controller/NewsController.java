@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.news.crimson.exception.ServiceException;
 import com.news.crimson.model.NewsInfo;
+import com.news.crimson.model.TopicNewsInfo;
 import com.news.crimson.service.NewsService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class NewsController {
 	}
 
 	@GetMapping(path = "/news/topic", produces = "application/json")
-	public List<NewsInfo> getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
+	public List<TopicNewsInfo> getNewsByTopic(@RequestParam(required = true) String q) throws ServiceException {
 		return newsService.getNewsByTopic(q);
 	}
 	

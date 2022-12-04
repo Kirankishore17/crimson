@@ -71,7 +71,6 @@ public class UserDao {
 		
 		HashMap<String,Integer> categoryListCount = new HashMap<String,Integer>();
 		categoryListCount.put("WORLD", repo.countTotalNumberOfUsersForCategoryWorld());
-		categoryListCount.put("LOCAL", repo.countTotalNumberOfUsersForCategoryLocal());
 		categoryListCount.put("BUSINESS", repo.countTotalNumberOfUsersForCategoryBusiness());
 		categoryListCount.put("TECHNOLOGY", repo.countTotalNumberOfUsersForCategoryTechnology());
 		categoryListCount.put("ENTERTAINMENT", repo.countTotalNumberOfUsersForCategoryEntertainment());
@@ -80,6 +79,14 @@ public class UserDao {
 		categoryListCount.put("HEALTH", repo.countTotalNumberOfUsersForCategoryHealth());
 		return categoryListCount;
 		
+	}
+
+	public List<User> getProfileByLocation(String location) {
+		return repo.getProfileByLocation(location);
+	}
+
+	public List<User> getProfileByNewsCategory(String category) {
+		return repo.getProfileByNewsCategory(category);
 	}
 
 }

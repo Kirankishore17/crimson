@@ -1,5 +1,7 @@
 package com.news.crimson.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,6 @@ public class ProfileController {
 		}
 		User userResponse = profileService.updateProfileDetails(user);
 		return new ResponseEntity<User>(userResponse, statusCode);
-
 	}
 	
 	@GetMapping(path = "/profile/check", produces = "application/json")
@@ -88,5 +89,14 @@ public class ProfileController {
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
 
-	
+	@GetMapping(path = "/profile/search/location", produces = "application/json")
+	public List<User> getProfileByLocation(@RequestParam("location") String location) {
+		return profileService.getProfileByLocation(location);
+	}
+
+	@GetMapping(path = "/profile/search/category", produces = "application/json")
+	public List<User> getProfileByNewsCategory(@RequestParam("category") String category) {
+		return profileService.getProfileByNewsCategory(category);
+	}
+
 }

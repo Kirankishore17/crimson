@@ -121,5 +121,14 @@ public class ProfileService {
 		return message;
 	}
 
+	public List<User> getProfileByLocation(String location) {
+		return userDao.getProfileByLocation(location.toUpperCase());
+
+	}
+
+	public List<User> getProfileByNewsCategory(String category) {
+		return userDao.getProfileByNewsCategory(category.toUpperCase());
+	}
+
 	
 }
