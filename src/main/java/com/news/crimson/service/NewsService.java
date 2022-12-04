@@ -11,8 +11,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.news.crimson.dao.NewsDao;
+import com.news.crimson.dao.ShareNewsDao;
 import com.news.crimson.dao.TopicNewsDao;
+import com.news.crimson.dao.UserDao;
 import com.news.crimson.entity.BookmarkedNews;
+import com.news.crimson.entity.SharedNewsInfo;
+import com.news.crimson.entity.User;
 import com.news.crimson.exception.ServiceException;
 import com.news.crimson.model.NewsInfo;
 import com.news.crimson.model.TopicNewsInfo;
@@ -44,6 +48,12 @@ public class NewsService {
 
 	@Autowired
 	private TopicNewsDao topicNewsDao;
+
+	@Autowired
+	private ShareNewsDao shareNewsDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -123,4 +133,27 @@ public class NewsService {
 		return newsDao.getBookmarkedNews(userId);
 	}
 
+	public String shareNews(SharedNewsInfo sharedNewsInfo) {
+		boolean alreadyShared = shareNewsDao.checkExists(sharedNewsInfo);
+		if (!alreadyShared) {
+			SharedNewsInfo info = shareNewsDao.shareNews(sharedNewsInfo);
+			if (info.getId() != null)
+				return "News Shared to Feed";
+			else
+				return "Share news Failed";
+		}else {
+			return "News Already Shared";
+		}
+	}
+
+	public List<SharedNewsInfo> getFeed(Integer userId) throws ServiceException {
+		User user = userDao.findUserById(userId);
+		if (user == null)
+			throw new ServiceException("Invalid userId");
+		List<Integer> ids = new ArrayList<>();
+		user.getFriends().forEach(x -> ids.add(x.getFriendId()));
+		user.getFollowers().forEach(x -> ids.add(x.getFollowerId()));
+		ids.add(user.getId());
+		return shareNewsDao.getFeed(ids);
+	}
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.news.crimson.entity.SharedNewsInfo;
 import com.news.crimson.exception.ServiceException;
 import com.news.crimson.model.NewsInfo;
 import com.news.crimson.model.TopicNewsInfo;
@@ -49,6 +50,16 @@ public class NewsController {
 	@GetMapping(path = "/news/readlater", produces = "application/json")
 	public String getBookmarkedNews(@RequestParam(required = true) Integer userId) throws ServiceException {
 		return newsService.getBookmarkedNews(userId);
+	}
+	
+	@PostMapping(path = "/news/feed", produces = "application/json")
+	public String shareNews(@RequestBody SharedNewsInfo sharedNewsInfo) throws ServiceException {
+		return newsService.shareNews(sharedNewsInfo);
+	}
+
+	@GetMapping(path = "/news/feed", produces = "application/json")
+	public List<SharedNewsInfo> getFeed(@RequestParam(required = true) Integer userId) throws ServiceException {
+		return newsService.getFeed(userId);
 	}
 
 }
