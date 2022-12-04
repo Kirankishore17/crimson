@@ -21,4 +21,9 @@ public interface FriendsRepo extends JpaRepository<FriendProfile, Integer> {
 			 Integer userId, @Param("friendId")
 			 Integer friendId);
 	
+	@Query(value = "SELECT USER_ID FROM FRIEND_PROFILE u WHERE u.friend_id=:userId AND u.friend_status='Pending'",
+			 nativeQuery = true) List<Integer> getUserRequestsById(@Param("userId")
+			 Integer userId);
+	
+	
 }

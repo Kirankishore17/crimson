@@ -1,5 +1,7 @@
 package com.news.crimson.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,12 +124,32 @@ public class ProfileService {
 	}
 
 	public List<User> getProfileByLocation(String location) {
+		
 		return userDao.getProfileByLocation(location.toUpperCase());
-
 	}
 
 	public List<User> getProfileByNewsCategory(String category) {
+		
 		return userDao.getProfileByNewsCategory(category.toUpperCase());
+	}
+	
+	public List<HashMap<String, String>> getRequests(Integer userId) {		
+		
+		List<Integer> userIDs = friendDao.getPendingFriendRequests(userId);
+		List<HashMap<String, String>> requestedUsers = new ArrayList<HashMap<String, String>>();
+		User user = new User();
+		String name;
+		for(int i=0; i<userIDs.size(); i++) {			
+			user = userDao.findUserById(userIDs.get(i));
+			//System.out.println("Users id =" + userIDs.get(i));
+			name = user.getFirstName() + " " + user.getLastName();
+			HashMap<String,String> map = new HashMap<>();
+			map.put("userId", user.getId().toString());
+			map.put("name", name);
+			requestedUsers.add(map);
+			//System.out.println(requestedUsers.get(user.getId()));
+		}
+		return requestedUsers;
 	}
 
 	
