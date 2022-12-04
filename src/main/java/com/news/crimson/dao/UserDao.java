@@ -54,6 +54,12 @@ public class UserDao {
 		if(user.size() == 1) return true;
 		else return false;
 	}
+	
+	public User getUserbyEmailAndLoginSource(String email, String loginSource) {
+		List<User> user = repo.getUserByEmailAndSource(email, loginSource);
+		if(user.size() == 1) return user.get(0);
+		else return new User();
+	}
 
 	public User findUserById(Integer userId) {
 		 
