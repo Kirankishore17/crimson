@@ -1,5 +1,6 @@
 package com.news.crimson.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,7 @@ public class ProfileController {
 	@GetMapping(path = "/profile/check", produces = "application/json")
 	public Boolean unblockProfile(@RequestParam("email") String email, @RequestParam("loginSource") String loginSource) {
 		return profileService.checkProfile(email,loginSource);
-	}
-		
+	}		
 
 	@PostMapping(path = "/profile/block", produces = "application/json")
 	public ResponseEntity<String> blockProfile(@RequestParam("userId") Integer userId, @RequestParam("blockId") Integer blockId) {
@@ -88,15 +88,12 @@ public class ProfileController {
 		String message = profileService.deleteFriend(userId, friendId);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 	}
-
-	@GetMapping(path = "/profile/search/location", produces = "application/json")
-	public List<User> getProfileByLocation(@RequestParam("location") String location) {
-		return profileService.getProfileByLocation(location);
+	
+	@GetMapping(path = "/profile/pendingrequests", produces = "application/json")
+	public List<HashMap<String, String>> getPendingRequests(@RequestParam("userId") Integer userId) {
+		return profileService.getRequests(userId);
+	  
 	}
-
-	@GetMapping(path = "/profile/search/category", produces = "application/json")
-	public List<User> getProfileByNewsCategory(@RequestParam("category") String category) {
-		return profileService.getProfileByNewsCategory(category);
-	}
-
+	 
+	
 }
