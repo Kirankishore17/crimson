@@ -43,7 +43,7 @@ public class ProfileController {
 	}
 	
 	@GetMapping(path = "/profile/check", produces = "application/json")
-	public Boolean unblockProfile(@RequestParam("email") String email, @RequestParam("loginSource") String loginSource) {
+	public Boolean checkProfile(@RequestParam("email") String email, @RequestParam("loginSource") String loginSource) {
 		return profileService.checkProfile(email,loginSource);
 	}		
 
@@ -93,6 +93,16 @@ public class ProfileController {
 	public List<HashMap<String, String>> getPendingRequests(@RequestParam("userId") Integer userId) {
 		return profileService.getRequests(userId);
 	  
+	}
+	
+	@GetMapping(path = "/profile/search/location", produces = "application/json")
+	public List<User> getProfileByLocation(@RequestParam("location") String location) {
+	return profileService.getProfileByLocation(location);
+	}
+
+	@GetMapping(path = "/profile/search/category", produces = "application/json")
+	public List<User> getProfileByNewsCategory(@RequestParam("category") String category) {
+	return profileService.getProfileByNewsCategory(category);
 	}
 	 
 	
