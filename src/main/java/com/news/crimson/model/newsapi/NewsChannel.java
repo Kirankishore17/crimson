@@ -3,7 +3,6 @@ package com.news.crimson.model.newsapi;
 import java.util.List;
 
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class NewsChannel {

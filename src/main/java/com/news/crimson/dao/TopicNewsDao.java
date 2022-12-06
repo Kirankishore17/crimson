@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.news.crimson.model.NewsInfo;
 import com.news.crimson.model.TopicNewsInfo;
 import com.news.crimson.repo.TopicNewsRepo;
 
