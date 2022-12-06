@@ -23,7 +23,7 @@ public class AdminService {
 		return userDao.numberOfUsers();
 	}
 	
-	public HashMap<String,Integer> getCategoryCount(){
+	public List<HashMap<String,String>> getCategoryCount(){
 		return userDao.categoryCount();
 	}
 	
