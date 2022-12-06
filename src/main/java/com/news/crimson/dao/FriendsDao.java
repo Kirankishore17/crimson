@@ -54,7 +54,7 @@ public class FriendsDao {
 		return friend;					
 	}
 	
-	public FriendProfile findPendingFriendsByIds(Integer userId, Integer friendId) {
+	public FriendProfile findFriendsByIds(Integer userId, Integer friendId) {
 		 
 		 List<FriendProfile> friendList = repo.getFriendsByUserIdAndFriendId(userId,friendId);
 		 if(friendList.size() == 1) {

@@ -1,5 +1,6 @@
 package com.news.crimson.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,16 +74,38 @@ public class UserDao {
 		return repo.countTotalNumberOfUsers();
 	}
 	
-	public HashMap<String,Integer> categoryCount(){
+	public List<HashMap<String,String>> categoryCount(){
 		
-		HashMap<String,Integer> categoryListCount = new HashMap<String,Integer>();
-		categoryListCount.put("WORLD", repo.countTotalNumberOfUsersForCategoryWorld());
-		categoryListCount.put("BUSINESS", repo.countTotalNumberOfUsersForCategoryBusiness());
-		categoryListCount.put("TECHNOLOGY", repo.countTotalNumberOfUsersForCategoryTechnology());
-		categoryListCount.put("ENTERTAINMENT", repo.countTotalNumberOfUsersForCategoryEntertainment());
-		categoryListCount.put("SPORTS", repo.countTotalNumberOfUsersForCategorySports());
-		categoryListCount.put("SCIENCE", repo.countTotalNumberOfUsersForCategoryScience());
-		categoryListCount.put("HEALTH", repo.countTotalNumberOfUsersForCategoryHealth());
+		List<HashMap<String,String>> categoryListCount = new ArrayList<HashMap<String,String>>();
+		HashMap<String,String> map1 = new HashMap<>();
+		map1.put("name","WORLD");
+		map1.put("count",repo.countTotalNumberOfUsersForCategoryWorld().toString());
+		categoryListCount.add(map1);
+		HashMap<String,String> map2 = new HashMap<>();
+		map2.put("name","BUSINESS");
+		map2.put("count",repo.countTotalNumberOfUsersForCategoryBusiness().toString());
+		categoryListCount.add(map2);
+		HashMap<String,String> map3 = new HashMap<>();
+		map3.put("name","TECHNOLOGY");
+		map3.put("count",repo.countTotalNumberOfUsersForCategoryTechnology().toString());
+		categoryListCount.add(map3);
+		HashMap<String,String> map4 = new HashMap<>();
+		map4.put("name","ENTERTAINMENT");
+		map4.put("count",repo.countTotalNumberOfUsersForCategoryEntertainment().toString());
+		categoryListCount.add(map4);
+		HashMap<String,String> map5 = new HashMap<>();
+		map5.put("name","SPORTS");
+		map5.put("count",repo.countTotalNumberOfUsersForCategorySports().toString());
+		categoryListCount.add(map5);
+		HashMap<String,String> map6 = new HashMap<>();
+		map6.put("name","SCIENCE");
+		map6.put("count",repo.countTotalNumberOfUsersForCategoryScience().toString());
+		categoryListCount.add(map6);
+		HashMap<String,String> map7 = new HashMap<>();
+		map7.put("name","HEALTH");
+		map7.put("count",repo.countTotalNumberOfUsersForCategoryHealth().toString());
+		categoryListCount.add(map7);
+		
 		return categoryListCount;
 		
 	}
