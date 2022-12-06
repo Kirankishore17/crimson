@@ -1,7 +1,11 @@
 package com.news.crimson.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,10 +14,12 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.news.crimson.dao.AppLogDao;
 import com.news.crimson.dao.NewsDao;
 import com.news.crimson.dao.ShareNewsDao;
 import com.news.crimson.dao.TopicNewsDao;
 import com.news.crimson.dao.UserDao;
+import com.news.crimson.entity.AppLog;
 import com.news.crimson.entity.BookmarkedNews;
 import com.news.crimson.entity.SharedNewsInfo;
 import com.news.crimson.entity.User;
@@ -61,11 +67,33 @@ public class NewsService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	private AppLogDao appLogDao;
+
 	public List<NewsInfo> getNews() throws ServiceException {
+		AppLog appLog = new AppLog();
+		appLog.setRequestBody("");
+		appLog.setDescription("GET : /news/home | getNews | API called for Home page");
+		appLog.setUserId("");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String timestamp = formatter.format(new Date());
+		appLog.setTimestamp(timestamp);
 		try {
-			return newsDao.getNews();
+			List<NewsInfo> res = newsDao.getNews();
+	        Collections.shuffle(res);
+			appLog.setType("INFO");
+			appLog.setResponse(res.size() + " News Objects returned");
+			appLog.setExceptionMessage("");
+			appLogDao.saveLog(appLog);
+			return res;
 		} catch (Exception e) {
 			log.error(e.toString());
+			appLog.setType("ERROR");
+			appLog.setExceptionMessage(
+					e.getMessage().substring(0, 100 > e.getMessage().length() ? e.getMessage().length() : 100));
+			appLog.setResponse("");
+			appLogDao.saveLog(appLog);
 			throw new ServiceException(e.getMessage());
 		}
 	}
@@ -74,8 +102,14 @@ public class NewsService {
 		String url = this.rssNewsSearch;
 		NewsBody body = new NewsBody();
 		List<String> queryList = new ArrayList<>();
+		AppLog appLog = new AppLog();
+		appLog.setDescription("GET : /news/search searchNews | API called for Search page");
+		appLog.setUserId("");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String timestamp = formatter.format(new Date());
+		appLog.setTimestamp(timestamp);
 		try {
-
 			if (q != null) {
 				queryList.add("q=" + q);
 			}
@@ -84,14 +118,24 @@ public class NewsService {
 			}
 			String query = String.join("&", queryList);
 			url = url + "?" + query;
-			log.info("Url: " + url);
+			log.info("Calling Search News Rss API: " + url);
 			String newsBodyStr = restTemplate.getForObject(url, String.class);
 			String json = newsInfoService.getJsonFromXmlString(newsBodyStr);
 			body = objectMapper.readValue(json.getBytes(), NewsBody.class);
-			return newsInfoService.getNewsInfoListFromRssNews(body, "search");
-
+			List<NewsInfo> res = newsInfoService.getNewsInfoListFromRssNews(body, "search");
+			appLog.setRequestBody(url);
+			appLog.setType("INFO");
+			appLog.setResponse(res.size() + " News Objects returned");
+			appLog.setExceptionMessage("");
+			appLogDao.saveLog(appLog);
+			return res;
 		} catch (RestClientException e) {
 			log.error(e.toString());
+			appLog.setType("ERROR");
+			appLog.setExceptionMessage(
+					e.getMessage().substring(0, 100 > e.getMessage().length() ? e.getMessage().length() : 100));
+			appLog.setResponse("");
+			appLogDao.saveLog(appLog);
 			throw new RestClientException("External API call failed");
 		} catch (Exception e) {
 			log.error(e.toString());
@@ -100,33 +144,72 @@ public class NewsService {
 	}
 
 	public List<TopicNewsInfo> getNewsByTopic(String topic) throws ServiceException {
+		AppLog appLog = new AppLog();
+		appLog.setDescription("GET : /news/topic getNewsByTopic | API called for topic by news - " + topic);
+		appLog.setUserId("");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String timestamp = formatter.format(new Date());
+		appLog.setTimestamp(timestamp);
 		try {
-			return topicNewsDao.getNewsByTopic(topic);
-
+			List<TopicNewsInfo> res = topicNewsDao.getNewsByTopic(topic);
+			appLog.setRequestBody("");
+			appLog.setType("INFO");
+			appLog.setResponse(res.size() + " News Objects returned");
+			appLog.setExceptionMessage("");
+			appLogDao.saveLog(appLog);
+			return res;
 		} catch (IllegalArgumentException e) {
 			log.error("Invalid topic name: " + topic.toUpperCase());
+			appLog.setType("ERROR");
+			appLog.setExceptionMessage(
+					e.getMessage().substring(0, 100 > e.getMessage().length() ? e.getMessage().length() : 100));
+			appLog.setResponse("");
+			appLogDao.saveLog(appLog);
 			throw new ServiceException(e.getMessage());
 		} catch (Exception e) {
 			log.error(e.toString());
+			appLog.setType("ERROR");
+			appLog.setExceptionMessage(
+					e.getMessage().substring(0, 100 > e.getMessage().length() ? e.getMessage().length() : 100));
+			appLog.setResponse("");
+			appLogDao.saveLog(appLog);
 			throw new ServiceException(e.getMessage());
 		}
 	}
 
 	public String bookmarkNews(Integer userId, NewsInfo newsInfo) {
-		BookmarkedNews bookmark = new BookmarkedNews();
-		bookmark.setUserId(userId.toString());
-		bookmark.setSourceUrl(newsInfo.getSourceUrl());
-		bookmark.setSourceName(newsInfo.getSourceName());
-		bookmark.setPublishDate(newsInfo.getPublishDate());
-		bookmark.setHeadlines(newsInfo.getHeadlines());
-		bookmark.setCover(newsInfo.getCover());
-		bookmark.setArticleUrl(newsInfo.getArticleUrl());
-//		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
-//		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-//		String savedDate = formatter.format(new Date());
-//		bookmark.setSavedDate(savedDate.replace(".", ""));
-		newsDao.bookmarkNews(bookmark);
-		return "News Saved Successfully";
+		AppLog appLog = new AppLog();
+		appLog.setDescription("POST : /news/readlater bookmarkNews | API called to add news to read later");
+		appLog.setUserId(userId.toString());
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String timestamp = formatter.format(new Date());
+		appLog.setTimestamp(timestamp);
+		try {
+			BookmarkedNews bookmark = new BookmarkedNews();
+			bookmark.setUserId(userId.toString());
+			bookmark.setSourceUrl(newsInfo.getSourceUrl());
+			bookmark.setSourceName(newsInfo.getSourceName());
+			bookmark.setPublishDate(newsInfo.getPublishDate());
+			bookmark.setHeadlines(newsInfo.getHeadlines());
+			bookmark.setCover(newsInfo.getCover());
+			bookmark.setArticleUrl(newsInfo.getArticleUrl());
+			newsDao.bookmarkNews(bookmark);
+			appLog.setType("INFO");
+			appLog.setResponse("News Bookmarked");
+			appLog.setExceptionMessage("");
+			appLogDao.saveLog(appLog);
+			return "News Saved Successfully";
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			appLog.setType("ERROR");
+			appLog.setExceptionMessage(
+					e.getMessage().substring(0, 100 > e.getMessage().length() ? e.getMessage().length() : 100));
+			appLog.setResponse("");
+			appLogDao.saveLog(appLog);
+			return "Unable to bookmark";
+		}
 	}
 
 	public String getBookmarkedNews(Integer userId) {
@@ -141,19 +224,41 @@ public class NewsService {
 				return "News Shared to Feed";
 			else
 				return "Share news Failed";
-		}else {
+		} else {
 			return "News Already Shared";
 		}
 	}
 
 	public List<SharedNewsInfo> getFeed(Integer userId) throws ServiceException {
-		User user = userDao.findUserById(userId);
-		if (user == null)
-			throw new ServiceException("Invalid userId");
-		List<Integer> ids = new ArrayList<>();
-		user.getFriends().forEach(x -> ids.add(x.getFriendId()));
-		user.getFollowers().forEach(x -> ids.add(x.getFollowerId()));
-		ids.add(user.getId());
-		return shareNewsDao.getFeed(ids);
+		AppLog appLog = new AppLog();
+		appLog.setDescription("GET : /news/feed getFeed | API called to fetch news shared by friends and followers");
+		appLog.setUserId(userId.toString());
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String timestamp = formatter.format(new Date());
+		appLog.setTimestamp(timestamp);
+		try {
+			User user = userDao.findUserById(userId);
+			if (user == null)
+				throw new ServiceException("Invalid userId");
+			List<Integer> ids = new ArrayList<>();
+			user.getFriends().forEach(x -> ids.add(x.getFriendId()));
+			user.getFollowers().forEach(x -> ids.add(x.getFollowerId()));
+			ids.add(user.getId());
+			List<SharedNewsInfo> res = shareNewsDao.getFeed(ids);
+			appLog.setType("INFO");
+			appLog.setResponse(res.size() + " News Objects returned");
+			appLog.setExceptionMessage("");
+			appLogDao.saveLog(appLog);
+			return res;
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			appLog.setType("ERROR");
+			appLog.setExceptionMessage(
+					e.getMessage().substring(0, 100 > e.getMessage().length() ? e.getMessage().length() : 100));
+			appLog.setResponse("");
+			appLogDao.saveLog(appLog);
+			return new ArrayList<>();
+		}
 	}
 }
