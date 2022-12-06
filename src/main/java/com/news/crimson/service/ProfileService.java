@@ -77,24 +77,12 @@ public class ProfileService {
 				user.setFavCategory("[]");
 			else
 				user.setFavCategory(checkUser.getFavCategory());
-
 		}
-
-//		if(checkUser.getId() != null) {
-//				user.setFavCategory(checkUser.getFavCategory());
-//			
-//		} else {		
-//		
-//			if(checkUser.getFavCategory() == null) {
-//				user.setFavCategory("[]");
-//			}
-//		}
 		return userDao.updateProfile(user);
 
 	}
 
 	public Boolean checkProfile(String email, String loginSource) {
-
 		return userDao.getUser(email, loginSource);
 	}
 
@@ -162,7 +150,7 @@ public class ProfileService {
 		appLog.setTimestamp(timestamp);
 		try {
 
-			FriendProfile friendUser = friendDao.findFriendsByIds(friendId,userId);
+			FriendProfile friendUser = friendDao.findFriendsByIds(friendId, userId);
 			friendUser.setFriendStatus("Confirmed");
 			String message = friendDao.addFriend(friendUser);
 			User otherFriend = userDao.findUserById(friendId);
@@ -224,13 +212,11 @@ public class ProfileService {
 		String name;
 		for (int i = 0; i < userIDs.size(); i++) {
 			user = userDao.findUserById(userIDs.get(i));
-			// System.out.println("Users id =" + userIDs.get(i));
 			name = user.getFirstName() + " " + user.getLastName();
 			HashMap<String, String> map = new HashMap<>();
 			map.put("userId", user.getId().toString());
 			map.put("name", name);
 			requestedUsers.add(map);
-			// System.out.println(requestedUsers.get(user.getId()));
 		}
 		return requestedUsers;
 	}

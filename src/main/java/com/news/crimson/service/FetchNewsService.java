@@ -65,7 +65,7 @@ public class FetchNewsService {
 		}
 	}
 
-	public String fetchNewsByTopic(String topic) throws ServiceException {
+	public String fetchNewsByTopic(String topic) {
 		String json;
 		try {
 			String topicKey = NewsCategory.valueOf(topic.toUpperCase()).getCategoryValue();
