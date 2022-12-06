@@ -30,7 +30,7 @@ public class AdminController {
 	}
 	
 	@GetMapping(path = "/admin/category/all/count", produces = "application/json")
-	public HashMap<String,Integer> getTotalCategoryCount() {
+	public List<HashMap<String,String>> getTotalCategoryCount() {
 		return adminService.getCategoryCount();
 	}
 	

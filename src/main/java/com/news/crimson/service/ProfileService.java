@@ -103,7 +103,7 @@ public class ProfileService {
 
 	public String addFriend(Integer userId, Integer friendId) {
 		
-		FriendProfile friendUser = friendDao.findPendingFriendsByIds(friendId,userId);
+		FriendProfile friendUser = friendDao.findFriendsByIds(friendId,userId);
 		friendUser.setFriendStatus("Confirmed");
 		String message = friendDao.addFriend(friendUser);
 		User otherFriend = userDao.findUserById(friendId);
