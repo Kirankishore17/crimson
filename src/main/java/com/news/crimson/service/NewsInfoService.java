@@ -80,10 +80,12 @@ public class NewsInfoService {
 					info.setSourceName(source.get(""));
 				String title = item.getTitle().substring(0, item.getTitle().length() - (2 + source.get("").length()));
 				info.setHeadlines(title);
-				if (!type.equalsIgnoreCase("search") || !type.equalsIgnoreCase("topic"))
-					info.setCover(getImageUrl(title));
-				else
+				if (type.equalsIgnoreCase("search"))
 					info.setCover("https://static.vecteezy.com/system/resources/previews/000/228/896/original/vector-breaking-news-alert-background-in-red-theme.jpg");
+				else if(type.equalsIgnoreCase("topic"))
+					info.setCover("https://static.vecteezy.com/system/resources/previews/000/228/896/original/vector-breaking-news-alert-background-in-red-theme.jpg");
+				else
+					info.setCover(getImageUrl(title));
 				int lenDate = item.getPubDate().length() - 13;
 				info.setPublishDate(item.getPubDate().substring(0, lenDate));
 				info.setArticleUrl(item.getLink());
